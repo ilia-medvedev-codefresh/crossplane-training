@@ -5,6 +5,6 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
-  package: crossplane/provider-helm:v0.13.0
+  package: xpkg.upbound.io/crossplane-contrib/provider-helm:v0.13.0
   controllerConfigRef:
     name: helm-config-debug
