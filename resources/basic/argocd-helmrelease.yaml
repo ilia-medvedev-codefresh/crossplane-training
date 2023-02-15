@@ -1,0 +1,13 @@
+apiVersion: helm.crossplane.io/v1beta1
+kind: Release
+metadata:
+  name: vcluster-test-argocd
+spec:
+  providerConfigRef:
+    name: vcluster-test-helm-provider
+  forProvider:
+    chart:
+      name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 5.21.0
+    namespace: argocd

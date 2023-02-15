@@ -1,7 +1,7 @@
 apiVersion: helm.crossplane.io/v1beta1
 kind: Release
 metadata:
-  name: vcluster
+  name: vcluster-test
 spec:
   forProvider:
     chart:
@@ -10,6 +10,11 @@ spec:
       version: 0.14.0
     namespace: vcluster-test
     values:
+      syncer:
+        extraArgs:
+        - --out-kube-config-secret=vcluster-kubeconfig
+        - --out-kube-config-server=https://vcluster-test.vcluster-test.svc.cluster.local
+        - --tls-san=vcluster-test.vcluster-test.svc.cluster.local
       sync:
         ingresses:
           enabled: true

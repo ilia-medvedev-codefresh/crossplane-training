@@ -1,0 +1,11 @@
+apiVersion: helm.crossplane.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: vcluster-test-helm-provider
+spec:
+  credentials:
+    secretRef:
+      key: config
+      name: vcluster-kubeconfig
+      namespace: vcluster-test
+    source: Secret
