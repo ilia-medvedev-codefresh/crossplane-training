@@ -1,0 +1,19 @@
+apiVersion: helm.crossplane.io/v1beta1
+kind: Release
+metadata:
+  name: vcluster
+spec:
+  forProvider:
+    chart:
+      name: vcluster
+      repository: https://charts.loft.sh
+      version: 0.14.0
+    namespace: vcluster-test
+    values:
+      sync:
+        ingresses:
+          enabled: true
+        poddisruptionbudgets:
+          enabled: true
+  providerConfigRef:
+    name: default
