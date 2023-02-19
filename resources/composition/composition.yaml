@@ -1,0 +1,69 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: virtualargocd
+  labels:
+    crossplane.io/xrd:  xvirtualargocds.demo.codefresh.io
+    provider: helm
+spec:
+  compositeTypeRef:
+    apiVersion: demo.codefresh.io/v1alpha1
+    kind: XVirtualArgoCD
+  resources:
+  - name: vcluster
+    base:
+      apiVersion: helm.crossplane.io/v1beta1
+      kind: Release
+      name: vcluster-test-argocd
+      spec:
+        forProvider:
+          chart:
+            name: vcluster
+            repository: https://charts.loft.sh
+            version: 0.14.0
+          namespace: vcluster-test
+          values:
+            syncer:
+              extraArgs:
+              - --out-kube-config-secret=vcluster-kubeconfig
+              - --out-kube-config-server=https://vcluster-test.vcluster-test.svc.cluster.local
+              - --tls-san=vcluster-test.vcluster-test.svc.cluster.local
+            sync:
+              ingresses:
+                enabled: true
+              poddisruptionbudgets:
+                enabled: true
+        providerConfigRef:
+          name: default
+    patches:
+    - type: FromCompositeFieldPath
+      fromFieldPath: metadata.name
+      toFieldPath: spec.forProvider.namespace
+    - type: FromCompositeFieldPath
+      fromFieldPath: metadata.name
+      toFieldPath: name
+      transforms:
+      - type: string
+        string:
+          fmt: "%s-vcluster"
+
+    - type: CombineFromComposite
+      combine:
+        variables:
+        - fromFieldPath: metadata.name
+        - fromFieldPath: metadata.name
+        strategy: string
+        string:
+          fmt: "--out-kube-config-server=https://%s.%s.svc.cluster.local"
+      toFieldPath: spec.forProvider.values.syncer.extraArgs[1]
+    - type: CombineFromComposite
+      combine:
+        variables:
+        - fromFieldPath: metadata.name
+        - fromFieldPath: metadata.name
+        strategy: string
+        string:
+          fmt: "--tls-san=%s.%s.svc.cluster.local"
+      toFieldPath: spec.forProvider.values.syncer.extraArgs[2]
+    - fromFieldPath: "metadata.annotations[crossplane.io/external-name]"
+      toFieldPath: "metadata.annotations[crossplane.io/external-name]"
