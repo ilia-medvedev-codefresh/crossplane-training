@@ -7,4 +7,4 @@ metadata:
 spec:
   package: "crossplane/provider-kubernetes:v0.4.1"
   controllerConfigRef:
-  name: kubernetes-controller-config
+    name: kubernetes-controller-config
