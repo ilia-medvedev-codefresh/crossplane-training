@@ -46,7 +46,6 @@ spec:
       - type: string
         string:
           fmt: "%s-vcluster"
-
     - type: CombineFromComposite
       combine:
         variables:
@@ -65,5 +64,3 @@ spec:
         string:
           fmt: "--tls-san=%s.%s.svc.cluster.local"
       toFieldPath: spec.forProvider.values.syncer.extraArgs[2]
-    - fromFieldPath: "metadata.annotations[crossplane.io/external-name]"
-      toFieldPath: "metadata.annotations[crossplane.io/external-name]"
