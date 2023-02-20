@@ -64,3 +64,21 @@ spec:
         string:
           fmt: "--tls-san=%s.%s.svc.cluster.local"
       toFieldPath: spec.forProvider.values.syncer.extraArgs[2]
+  - name: observe-delete-namespace
+    base:
+      apiVersion: kubernetes.crossplane.io/v1alpha1
+      kind: Object
+      metadata:
+        name: foo
+      spec:
+        managementPolicy: ObserveDelete
+        forProvider:
+          manifest:
+            apiVersion: v1
+            kind: Namespace
+        providerConfigRef:
+          name: kubernetes-provider
+    patches:
+    - type: FromCompositeFieldPath
+      fromFieldPath: metadata.name
+      toFieldPath: name
