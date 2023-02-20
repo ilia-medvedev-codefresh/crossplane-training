@@ -5,4 +5,4 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
-  package: "crossplane/provider-kubernetes:v0.6.0"
+  package: "crossplane/provider-kubernetes:v0.4.1"
