@@ -41,7 +41,7 @@ spec:
       toFieldPath: spec.forProvider.namespace
     - type: FromCompositeFieldPath
       fromFieldPath: metadata.name
-      toFieldPath: name
+      toFieldPath: metadata.name
       transforms:
       - type: string
         string:
@@ -53,7 +53,7 @@ spec:
         - fromFieldPath: metadata.name
         strategy: string
         string:
-          fmt: "--out-kube-config-server=https://%s.%s.svc.cluster.local"
+          fmt: "--out-kube-config-server=https://%s-vcluster.%s.svc.cluster.local"
       toFieldPath: spec.forProvider.values.syncer.extraArgs[1]
     - type: CombineFromComposite
       combine:
@@ -62,7 +62,7 @@ spec:
         - fromFieldPath: metadata.name
         strategy: string
         string:
-          fmt: "--tls-san=%s.%s.svc.cluster.local"
+          fmt: "--tls-san=%s-vcluster.%s.svc.cluster.local"
       toFieldPath: spec.forProvider.values.syncer.extraArgs[2]
   - name: observe-delete-namespace
     base:
@@ -81,4 +81,54 @@ spec:
     patches:
     - type: FromCompositeFieldPath
       fromFieldPath: metadata.name
-      toFieldPath: name
+      toFieldPath: metadata.name
+  - name: provider-config-helm-vcluster
+    base:
+      apiVersion: helm.crossplane.io/v1beta1
+      kind: ProviderConfig
+      metadata:
+        name: foo
+      spec:
+        credentials:
+          secretRef:
+            key: config
+            name: vcluster-kubeconfig
+            namespace: foo
+          source: Secret
+    patches:
+    - type: FromCompositeFieldPath
+      fromFieldPath: metadata.name
+      toFieldPath: metadata.name
+    - type: FromCompositeFieldPath
+      fromFieldPath: metadata.name
+      toFieldPath: spec.credentials.secretRef.namespace
+    - type: ToCompositeFieldPath
+      fromFieldPath: metadata.name
+      toFieldPath: status.vcluster.helmProviderName
+
+  - name: argocd-on-vcluster
+    base:
+      apiVersion: helm.crossplane.io/v1beta1
+      kind: Release
+      metadata:
+        name: vcluster-test-argocd
+      spec:
+        providerConfigRef:
+          name: vcluster-test-helm-provider
+        forProvider:
+          chart:
+            name: argo-cd
+            repository: https://argoproj.github.io/argo-helm
+            version: 5.21.0
+          namespace: argocd
+    patches:
+    - type: FromCompositeFieldPath
+      fromFieldPath: metadata.name
+      toFieldPath: metadata.name
+      transforms:
+      - type: string
+        string:
+          fmt: "%s-argocd"
+    - type: FromCompositeFieldPath
+      fromFieldPath: status.vcluster.helmProviderName
+      toFieldPath: spec.providerConfigRef.name

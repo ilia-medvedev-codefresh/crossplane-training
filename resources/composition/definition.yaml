@@ -32,9 +32,15 @@ spec:
           status:
             type: object
             properties:
-              kubeconfigSecretName:
-                description: Name of the secret that holds the Kubeconfig for the virtual cluster.
-                type: string
-              kubeconfigSecretKey:
-                description: Name of the key in the secret that hold Kubeconfig for the virtual cluster.
-                type: string
+              vcluster:
+                type: object
+                properties:
+                  kubeconfigSecretName:  
+                    description: Name of the secret that holds the Kubeconfig for the virtual cluster.
+                    type: string
+                  kubeconfigSecretKey:
+                    description: Name of the key in the secret that hold Kubeconfig for the virtual cluster.
+                    type: string
+                  helmProviderName:
+                    description: Name of the Helm provider created for vcluster
+                    type: string
