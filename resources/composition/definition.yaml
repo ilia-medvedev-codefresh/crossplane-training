@@ -27,6 +27,13 @@ spec:
                   values:
                     description: Values for vcluster Helm chart
                     type: object
+              argocd:
+                type: object
+                properties:
+                  values:
+                    x-kubernetes-preserve-unknown-fields: true
+                    description: Values for vcluster Helm chart
+                    type: object
             # required:
             # - vcluster-values
           status:

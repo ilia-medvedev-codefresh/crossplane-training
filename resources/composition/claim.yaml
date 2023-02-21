@@ -4,4 +4,10 @@ metadata:
   name: ilia-test
   annotations:
     crossplane.io/external-name: ilia-test
-spec: {}
+spec:
+  argocd:
+    values:
+      repoServer:
+        resources:
+          limits:
+            memory: 1Gi

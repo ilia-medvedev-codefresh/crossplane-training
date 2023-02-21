@@ -132,3 +132,10 @@ spec:
     - type: FromCompositeFieldPath
       fromFieldPath: status.vcluster.helmProviderName
       toFieldPath: spec.providerConfigRef.name
+    - type: FromCompositeFieldPath
+      fromFieldPath: spec.argocd.values
+      toFieldPath: spec.forProvider.values
+      policy:
+        mergeOptions:
+          appendSlice: true
+          keepMapValues: true
